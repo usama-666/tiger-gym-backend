@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true })); // To parse URL-encoded request
 
 app.use(
     cors({
-        origin: ["http://localhost:5174", process.env.CLIENT_URL],
+        origin: process.env.CLIENT_URL,
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true, // Allow sending cookies
@@ -95,12 +95,17 @@ app.post("/api/send-mail", async (req: Request, res: Response) => {
     transporter.sendMail(mailOptions, (error: any, info: any) => {
         if (error) {
             console.error("❌ Error:", error.message);
+            return res
+                .status(200)
+                .json({ error: error, message: "Email Sent Successfully" });
         } else {
             console.log("✅ Email sent:", info.response);
+            return res.status(200).json({
+                data: info.respons,
+                message: "Email Sent Successfully",
+            });
         }
     });
-
-    res.status(200).json({ message: "Email Sent Successfully" });
 });
 
 app.listen(port, () => {

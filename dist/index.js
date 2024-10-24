@@ -25,7 +25,7 @@ app.use(express.json()); // To parse JSON requests
 app.use(express.urlencoded({ extended: true })); // To parse URL-encoded requests
 //cors
 app.use(cors({
-    origin: ["http://localhost:5174", process.env.CLIENT_URL],
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // Allow sending cookies
@@ -78,12 +78,18 @@ app.post("/api/send-mail", (req, res) => __awaiter(void 0, void 0, void 0, funct
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error("❌ Error:", error.message);
+            return res
+                .status(200)
+                .json({ error: error, message: "Email Sent Successfully" });
         }
         else {
             console.log("✅ Email sent:", info.response);
+            return res.status(200).json({
+                data: info.respons,
+                message: "Email Sent Successfully",
+            });
         }
     });
-    res.status(200).json({ message: "Email Sent Successfully" });
 }));
 app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
