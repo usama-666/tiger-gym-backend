@@ -12,7 +12,7 @@ import { Request, Response } from "express";
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // Body parsing middleware
 app.use(express.json()); // To parse JSON requests
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true })); // To parse URL-encoded request
 
 app.use(
     cors({
-        origin: ["http://localhost:5174", "https://your-client-url.com"],
+        origin: ["http://localhost:5174", process.env.CLIENT_URL],
         methods: ["GET", "POST"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true, // Allow sending cookies
@@ -45,7 +45,6 @@ function greet(person: Person): string {
 }
 
 const result = greet({ name: "John", age: 123 });
-console.log(result);
 
 // Create a transporter object using Gmail SMTP
 const transporter = nodemailer.createTransport({
